@@ -1,0 +1,232 @@
+{
+  "name": "Calender",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "data-handling",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a30fc3b9-313e-4032-9799-fc3b1b2c2c19",
+      "name": "Webhook",
+      "webhookId": "41a5ebe1-f026-4b0c-af3a-7764b43df8f9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "acd2def0-cae4-4b4f-8745-00d9f1a20a34",
+              "name": "Full Name",
+              "value": "={{$json.query.name}}",
+              "type": "string"
+            },
+            {
+              "id": "93f5bad8-ddc6-4f57-98d5-cdb88180ed41",
+              "name": "Mobile",
+              "value": "={{ $json.query.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "b11c48c0-394f-427b-9995-280d6d40c611",
+              "name": "=city",
+              "value": "={{ $json.query.city }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "60ff43f9-7d37-42c4-8057-8dda7e3d1131",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ac9e81ed-25d7-4cd0-91bb-148c096a472a",
+              "name": "user.fullName",
+              "value": "={{ $json['Full Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f19ef6c1-3efc-4139-a1a4-153e79b8e1cf",
+              "name": "user.mobile",
+              "value": "={{ $json.Mobile }}",
+              "type": "string"
+            },
+            {
+              "id": "f59f6e1c-4788-48a8-8dd8-4fb3a4592f90",
+              "name": "user.city",
+              "value": "={{ $json.city }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "c83a809f-c548-4d07-a612-1fe42d291794",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        816,
+        -80
+      ],
+      "id": "83e1228d-4215-4540-a471-02b12e581fdc",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "561e3ddc-c7bc-4fac-9d1b-44095023646f",
+              "name": "meta.app",
+              "value": "=n8n",
+              "type": "string"
+            },
+            {
+              "id": "6956aa21-db78-4d78-a9fb-5e6f48ed74d4",
+              "name": "meta.version",
+              "value": "1.0",
+              "type": "string"
+            },
+            {
+              "id": "483c1cb6-c779-482f-8b1d-a28e1ff61e10",
+              "name": "flags.isVerified",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        64
+      ],
+      "id": "7b107e71-9d34-4000-80e2-cc2229a3d4bc",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        992,
+        16
+      ],
+      "id": "b7eab8b8-bca4-4d2a-9a80-5a172aa62f11",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5fd1d79c-4f76-49a8-b312-6855e0d6dbc0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "28b3615c792b5468b166f7eb21deb0e34928b43ff51a8917c1ecdeef03da39dc"
+  },
+  "id": "J4hpUqAc2AKayim4",
+  "tags": []
+}
